@@ -18,7 +18,7 @@ type book struct {
 func getBooks(db *sql.DB) (books []book, err error) {
 	var book book
 
-	rows, err := db.Query("SELECT * FROM local_db.book")
+	rows, err := db.Query("SELECT * FROM local_db.books")
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +63,7 @@ func main() {
 		log.Fatalf("failed to open db connection: %v\n", err)
 	}
 
-	http.HandleFunc("/channels", getBooksHandler(db))
+	http.HandleFunc("/books", getBooksHandler(db))
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatalf("failed to start http server: %v\n", err)
