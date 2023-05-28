@@ -1,5 +1,5 @@
-# Use the official golang image to create a mysql instance.
-# https://hub.docker.com/_/golang
+# Use the official mysql image to create a mysql instance.
+# https://hub.docker.com/_/mysql
 FROM mysql
 
 # Copy the database definition to a temporal directory.
