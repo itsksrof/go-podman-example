@@ -1,0 +1,68 @@
+# Save the output of this file and use kubectl create -f to import
+# it into Kubernetes.
+#
+# Created with podman-4.5.0
+
+# NOTE: If you generated this yaml from an unprivileged and rootless podman container on an SELinux
+# enabled system, check the podman generate kube man page for steps to follow to ensure that your pod/container
+# has the right permissions to access the volumes added.
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: "2023-05-28T10:32:35Z"
+  labels:
+    app: affectionatenightingale-pod
+  name: affectionatenightingale-pod
+spec:
+  ports:
+  - name: "3306"
+    nodePort: 30248
+    port: 3306
+    targetPort: 3306
+  - name: "8080"
+    nodePort: 32134
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: affectionatenightingale-pod
+  type: NodePort
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    io.podman.annotations.ulimit: nofile=524288:524288,nproc=127618:127618
+    org.opencontainers.image.base.digest/affectionatenightingale: sha256:13e429971e970ebcb7bc611de52d71a3c444247dc67cf7475a02718f
+    org.opencontainers.image.base.digest/focusedmclaren: sha256:a33d71b6c2bbd1397b1e906c3f7df0a645477d7249f1f034513f1cf4
+    org.opencontainers.image.base.name/affectionatenightingale: docker.io/library/mysql:latest
+    org.opencontainers.image.base.name/focusedmclaren: docker.io/library/golang:1.20-buster
+  creationTimestamp: "2023-05-28T10:32:35Z"
+  labels:
+    app: affectionatenightingale-pod
+  name: affectionatenightingale-pod
+spec:
+  containers:
+  - args:
+    - mysqld
+    - --init-file=/tmp/create-local-db.sql
+    env:
+    - name: MYSQL_ROOT_PASSWORD
+      value: pass
+    image: localhost/mysql-container:latest
+    name: affectionatenightingale
+    ports:
+    - containerPort: 3306
+    tty: true
+    volumeMounts:
+    - mountPath: /var/lib/mysql
+      name: b76a019189e6f6d63c8f68db9fde81ab1f25f2984bc0a7a9877bf2090eece0c9-pvc
+  - image: localhost/golang-container:latest
+    name: focusedmclaren
+    ports:
+    - containerPort: 8080
+    tty: true
+  volumes:
+  - name: b76a019189e6f6d63c8f68db9fde81ab1f25f2984bc0a7a9877bf2090eece0c9-pvc
+    persistentVolumeClaim:
+      claimName: b76a019189e6f6d63c8f68db9fde81ab1f25f2984bc0a7a9877bf2090eece0c9
