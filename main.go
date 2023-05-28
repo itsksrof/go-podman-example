@@ -15,6 +15,27 @@ type Channel struct {
 	Name string `json:"name"`
 }
 
+func getChannels(db *sql.DB) ([]Channel, error) {
+	rows, err := db.Query("SELECT * FROM local_db.channels")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	channels := []Channel{}
+	channel := Channel{}
+
+	for rows.Next() {
+		if err := rows.Scan(&channel.ID, &channel.Name); err != nil {
+			return nil, err
+		}
+
+		channels = append(channels, channel)
+	}
+
+	return channels, nil
+}
+
 func main() {
 	db, err := sql.Open("mysql", "root:pass@tcp(localhost)/local_db?parseTime=true")
 	if err != nil {
@@ -42,25 +63,4 @@ func main() {
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatalf("failed to start http server: %v\n", err)
 	}
-}
-
-func getChannels(db *sql.DB) ([]Channel, error) {
-	rows, err := db.Query("SELECT * FROM local_db.channels")
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	channels := []Channel{}
-	channel := Channel{}
-
-	for rows.Next() {
-		if err := rows.Scan(&channel.ID, &channel.Name); err != nil {
-			return nil, err
-		}
-
-		channels = append(channels, channel)
-	}
-
-	return channels, nil
 }
