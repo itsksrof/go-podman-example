@@ -10,22 +10,22 @@
 apiVersion: v1
 kind: Service
 metadata:
-  creationTimestamp: "2023-05-28T10:32:35Z"
+  creationTimestamp: "2023-05-28T19:58:30Z"
   labels:
-    app: affectionatenightingale-pod
-  name: affectionatenightingale-pod
+    app: admiringnightingale-pod
+  name: admiringnightingale-pod
 spec:
   ports:
   - name: "3306"
-    nodePort: 30248
+    nodePort: 30195
     port: 3306
     targetPort: 3306
   - name: "8080"
-    nodePort: 32134
+    nodePort: 31682
     port: 8080
     targetPort: 8080
   selector:
-    app: affectionatenightingale-pod
+    app: admiringnightingale-pod
   type: NodePort
 ---
 apiVersion: v1
@@ -33,14 +33,14 @@ kind: Pod
 metadata:
   annotations:
     io.podman.annotations.ulimit: nofile=524288:524288,nproc=127618:127618
-    org.opencontainers.image.base.digest/affectionatenightingale: sha256:13e429971e970ebcb7bc611de52d71a3c444247dc67cf7475a02718f
-    org.opencontainers.image.base.digest/focusedmclaren: sha256:a33d71b6c2bbd1397b1e906c3f7df0a645477d7249f1f034513f1cf4
-    org.opencontainers.image.base.name/affectionatenightingale: docker.io/library/mysql:latest
-    org.opencontainers.image.base.name/focusedmclaren: docker.io/library/golang:1.20-buster
-  creationTimestamp: "2023-05-28T10:32:35Z"
+    org.opencontainers.image.base.digest/admiringnightingale: sha256:13e429971e970ebcb7bc611de52d71a3c444247dc67cf7475a02718f
+    org.opencontainers.image.base.digest/friendlywescoff: sha256:a33d71b6c2bbd1397b1e906c3f7df0a645477d7249f1f034513f1cf4
+    org.opencontainers.image.base.name/admiringnightingale: docker.io/library/mysql:latest
+    org.opencontainers.image.base.name/friendlywescoff: docker.io/library/golang:1.20-buster
+  creationTimestamp: "2023-05-28T19:58:30Z"
   labels:
-    app: affectionatenightingale-pod
-  name: affectionatenightingale-pod
+    app: admiringnightingale-pod
+  name: admiringnightingale-pod
 spec:
   containers:
   - args:
@@ -50,19 +50,19 @@ spec:
     - name: MYSQL_ROOT_PASSWORD
       value: pass
     image: localhost/mysql-container:latest
-    name: affectionatenightingale
+    name: admiringnightingale
     ports:
     - containerPort: 3306
     tty: true
     volumeMounts:
     - mountPath: /var/lib/mysql
-      name: b76a019189e6f6d63c8f68db9fde81ab1f25f2984bc0a7a9877bf2090eece0c9-pvc
+      name: 10fc6631947b113462912416cb6ed5a014d0c171a12520acd3903ad5684fbdfb-pvc
   - image: localhost/golang-container:latest
-    name: focusedmclaren
+    name: friendlywescoff
     ports:
     - containerPort: 8080
     tty: true
   volumes:
-  - name: b76a019189e6f6d63c8f68db9fde81ab1f25f2984bc0a7a9877bf2090eece0c9-pvc
+  - name: 10fc6631947b113462912416cb6ed5a014d0c171a12520acd3903ad5684fbdfb-pvc
     persistentVolumeClaim:
-      claimName: b76a019189e6f6d63c8f68db9fde81ab1f25f2984bc0a7a9877bf2090eece0c9
+      claimName: 10fc6631947b113462912416cb6ed5a014d0c171a12520acd3903ad5684fbdfb
