@@ -53,7 +53,6 @@ func getBooksHandler(db *sql.DB) http.HandlerFunc {
 
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(books)
-		return
 	}
 }
 
