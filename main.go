@@ -3,37 +3,58 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
-	"errors"
 	"log"
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type Channel struct {
-	ID   uint   `json:"id"`
-	Name string `json:"name"`
+type book struct {
+	ID     uint   `json:"id"`
+	Title  string `json:"title"`
+	Author string `json:"author"`
 }
 
-func getChannels(db *sql.DB) ([]Channel, error) {
-	rows, err := db.Query("SELECT * FROM local_db.channels")
+func getBooks(db *sql.DB) (books []book, err error) {
+	var book book
+
+	rows, err := db.Query("SELECT * FROM local_db.book")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	channels := []Channel{}
-	channel := Channel{}
-
 	for rows.Next() {
-		if err := rows.Scan(&channel.ID, &channel.Name); err != nil {
+		if err := rows.Scan(
+			&book.ID,
+			&book.Title,
+			&book.Author,
+		); err != nil {
 			return nil, err
 		}
 
-		channels = append(channels, channel)
+		books = append(books, book)
 	}
 
-	return channels, nil
+	return books, nil
+}
+
+func getBooksHandler(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		books, err := getBooks(db)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(map[string]string{
+				"error": err.Error(),
+			})
+
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(books)
+		return
+	}
 }
 
 func main() {
@@ -42,23 +63,7 @@ func main() {
 		log.Fatalf("failed to open db connection: %v\n", err)
 	}
 
-	http.HandleFunc("/channels", func(w http.ResponseWriter, r *http.Request) {
-		channels, err := getChannels(db)
-		if err != nil {
-			if errors.Is(err, sql.ErrNoRows) {
-				w.WriteHeader(http.StatusNotFound)
-				json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
-				return
-			}
-
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
-			return
-		}
-
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(channels)
-	})
+	http.HandleFunc("/channels", getBooksHandler(db))
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatalf("failed to start http server: %v\n", err)
