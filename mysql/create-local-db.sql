@@ -6,14 +6,15 @@ CREATE DATABASE local_db;
 
 USE local_db;
 
-DROP TABLE IF EXISTS channels;
+DROP TABLE IF EXISTS books;
 
-CREATE TABLE channels (
+CREATE TABLE books (
     id int unsigned NOT NULL AUTO_INCREMENT,
-    name varchar(30) NOT NULL DEFAULT '',
+    title varchar(60) NOT NULL DEFAULT '',
+    author varchar(60) NOT NULL DEFAULT '',
     PRIMARY KEY(id)
 );
 
-INSERT INTO channels VALUES(1, 'ThePrimeagen');
-INSERT INTO channels VALUES(2, 'Randy');
-INSERT INTO channels VALUES(3, 'CS Jackie');
+INSERT INTO books VALUES(1, '1984', 'George Orwell');
+INSERT INTO books VALUES(2, 'Creativity, Inc', 'Ed Catmull');
+INSERT INTO books VALUES(3, 'The Brothers Karamazov', 'Fyodor Dostoevsky');
