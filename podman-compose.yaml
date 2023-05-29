@@ -10,22 +10,22 @@
 apiVersion: v1
 kind: Service
 metadata:
-  creationTimestamp: "2023-05-28T19:58:30Z"
+  creationTimestamp: "2023-05-29T16:37:06Z"
   labels:
-    app: admiringnightingale-pod
-  name: admiringnightingale-pod
+    app: vibrantbassi-pod
+  name: vibrantbassi-pod
 spec:
   ports:
   - name: "3306"
-    nodePort: 30195
+    nodePort: 31666
     port: 3306
     targetPort: 3306
   - name: "8080"
-    nodePort: 31682
+    nodePort: 31093
     port: 8080
     targetPort: 8080
   selector:
-    app: admiringnightingale-pod
+    app: vibrantbassi-pod
   type: NodePort
 ---
 apiVersion: v1
@@ -33,14 +33,14 @@ kind: Pod
 metadata:
   annotations:
     io.podman.annotations.ulimit: nofile=524288:524288,nproc=127618:127618
-    org.opencontainers.image.base.digest/admiringnightingale: sha256:13e429971e970ebcb7bc611de52d71a3c444247dc67cf7475a02718f
-    org.opencontainers.image.base.digest/friendlywescoff: sha256:a33d71b6c2bbd1397b1e906c3f7df0a645477d7249f1f034513f1cf4
-    org.opencontainers.image.base.name/admiringnightingale: docker.io/library/mysql:latest
-    org.opencontainers.image.base.name/friendlywescoff: docker.io/library/golang:1.20-buster
-  creationTimestamp: "2023-05-28T19:58:30Z"
+    org.opencontainers.image.base.digest/lovingdirac: sha256:a33d71b6c2bbd1397b1e906c3f7df0a645477d7249f1f034513f1cf4
+    org.opencontainers.image.base.digest/vibrantbassi: sha256:13e429971e970ebcb7bc611de52d71a3c444247dc67cf7475a02718f
+    org.opencontainers.image.base.name/lovingdirac: docker.io/library/golang:1.20-buster
+    org.opencontainers.image.base.name/vibrantbassi: docker.io/library/mysql:latest
+  creationTimestamp: "2023-05-29T16:37:06Z"
   labels:
-    app: admiringnightingale-pod
-  name: admiringnightingale-pod
+    app: vibrantbassi-pod
+  name: vibrantbassi-pod
 spec:
   containers:
   - args:
@@ -50,19 +50,17 @@ spec:
     - name: MYSQL_ROOT_PASSWORD
       value: pass
     image: localhost/mysql-container:latest
-    name: admiringnightingale
+    name: vibrantbassi
     ports:
     - containerPort: 3306
-    tty: true
     volumeMounts:
     - mountPath: /var/lib/mysql
-      name: 10fc6631947b113462912416cb6ed5a014d0c171a12520acd3903ad5684fbdfb-pvc
+      name: a196758d08199bd7200bf0e6f6f89fe1a6c89e92336aa6a8d7e3d79ec49d2576-pvc
   - image: localhost/golang-container:latest
-    name: friendlywescoff
+    name: lovingdirac
     ports:
     - containerPort: 8080
-    tty: true
   volumes:
-  - name: 10fc6631947b113462912416cb6ed5a014d0c171a12520acd3903ad5684fbdfb-pvc
+  - name: a196758d08199bd7200bf0e6f6f89fe1a6c89e92336aa6a8d7e3d79ec49d2576-pvc
     persistentVolumeClaim:
-      claimName: 10fc6631947b113462912416cb6ed5a014d0c171a12520acd3903ad5684fbdfb
+      claimName: a196758d08199bd7200bf0e6f6f89fe1a6c89e92336aa6a8d7e3d79ec49d2576
